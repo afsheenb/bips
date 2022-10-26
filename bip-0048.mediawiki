@@ -54,10 +54,18 @@ multi-signature addresses/scripts are derived from deterministically sorted publ
 
 ===Path levels===
 
-We define the following 6 levels in BIP32 path:
+For BIP48 version 1, We define the following 6 levels in BIP32 path:
 
 <pre>
 m / purpose' / coin_type' / account' / script_type' / change / address_index
+</pre>
+
+<code>h</code> or <code>'</code> in the path indicates that BIP32 hardened derivation is used.
+
+For BIP48 version 2, we define the following levels in BIP32 path:
+
+<pre>
+m / purpose' / coin_type' / account' / vendor' / script_type' / change / address_index
 </pre>
 
 <code>h</code> or <code>'</code> in the path indicates that BIP32 hardened derivation is used.
@@ -78,7 +86,11 @@ Sharing the same space for various networks has some disadvantages.
 
 Avoiding reusing addresses across networks and improving privacy issues.
 
-Coin type <code>0</code> for mainnet and <code>1</code> for testnet.
+For BIP48 version 1, the coin type is set to <code>0</code> for mainnet and <code>1</code> for testnet.
+
+For BIP48 version 2, the coin type is set to <code>2</code> for mainnet and <code>3</code> for testnet.
+
+BIP48 version3 has yet to be proposed but is assumed to start at coin type <code>3</code>.
 
 Hardened derivation is used at this level.
 
@@ -96,6 +108,19 @@ Accounts are numbered from index 0 in sequentially increasing manner.
 This number is used as child index in BIP32 derivation.
 
 Hardened derivation is used at this level.
+
+===Vendor (v2 only)===
+
+Vendor is only set on BIP48 version 2 addresses; this level splits the key space into individual
+vendor-specific product keys, so the wallet doesn't co-mingle coins associated with different products
+under the same account. 
+
+Users can use this level to organize the funds in the same
+fashion as products associated with a single bank accounts; e.g.
+different checkings, savings or retirement accounts associated with the same
+master bank account.
+
+
 
 ===Script===
 
