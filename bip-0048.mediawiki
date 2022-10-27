@@ -65,7 +65,7 @@ m / purpose' / coin_type' / account' / script_type' / change / address_index
 For BIP48 version 2, we define the following levels in BIP32 path:
 
 <pre>
-m / purpose' / coin_type' / account' / vendor' / script_type' / change / address_index
+m / purpose' / coin_type' / account' / script_type' / vendor / change / address_index
 </pre>
 
 <code>h</code> or <code>'</code> in the path indicates that BIP32 hardened derivation is used.
@@ -109,19 +109,6 @@ This number is used as child index in BIP32 derivation.
 
 Hardened derivation is used at this level.
 
-===Vendor (v2 only)===
-
-Vendor is only set on BIP48 version 2 addresses; this level splits the key space into individual
-vendor-specific product keys, so the wallet doesn't co-mingle coins associated with different products
-under the same account. 
-
-Users can use this level to organize the funds in the same
-fashion as products associated with a single bank accounts; e.g.
-different checkings, savings or retirement accounts associated with the same
-master bank account.
-
-
-
 ===Script===
 
 This level splits the key space into two separate <code>script_type</code>(s). To provide
@@ -140,6 +127,20 @@ The recommended default for wallets is pay to witness script hash <code>m/48'/0'
 
 To add new script types submit a PR to this specification and include it in the list above:
 <code>X'</code>: Future script type <code>m/48'/0'/0'/X'</code></br>
+
+
+===Vendor (v2 only)===
+
+Vendor is only set on BIP48 version 2 addresses; this level splits the key space into individual
+vendor-specific product keys, so the wallet doesn't co-mingle coins associated with different products
+under the same account. 
+
+Users can use this level to organize the funds in the same
+fashion as products associated with a single bank accounts; e.g.
+different checkings, savings or retirement accounts associated with the same
+master bank account.
+
+Public derivation is used at this level.
 
 ===Change===
 
