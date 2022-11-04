@@ -37,7 +37,7 @@ millions of addresses per chain.
 
 This paper was inspired from BIP44.
 
-==Backwards compatibility==
+==Backwards compatibility with pre-BIP48 wallets==
 
 Currently a number of wallets utilize the ‎<code>m/48'</code> derivation scheme for HD multi-sig accounts.
 This BIP is intended to maintain the *existing* real world use of the ‎<code>m/48'</code> derivation.
@@ -45,6 +45,15 @@ No breaking changes are made so as to avoid "loss of funds" to existing users.
 Wallets which currently support the ‎<code>m/48'</code> derivation will not need to make any changes
 to comply with this BIP.
 
+==Versioning for future BIP48 derivation schemes==
+
+In order to allow wallets to support future changes to the ‎<code>m/48'</code> derivation scheme, the coin
+type field - set to ‎<code>0'</code> and ‎<code>1'</code> for mainnet and testnet in BIP48 version 1 - can
+implicitly also be treated as a version field - e.g. set to ‎<code>2'</code> and ‎<code>3'</code> for mainnet and testnet in BIP48 version 2,
+‎<code>4'</code> and ‎<code>5'</code> for mainnet and testnet in BIP48 version 3, and so on. Wallets can inspect the
+coin type field to decide which logic to use.
+
+The original BIP 48 specification 
 ==Specification==
 
 ===Key sorting===
@@ -80,6 +89,7 @@ It indicates that the subtree of this node is used according to this specificati
 Hardened derivation is used at this level.
 
 ===Coin type===
+====v1,v2====
 
 One master node (seed) can be used for multiple Bitcoin networks.
 Sharing the same space for various networks has some disadvantages.
@@ -95,6 +105,7 @@ BIP48 version3 has yet to be proposed but is assumed to start at coin type <code
 Hardened derivation is used at this level.
 
 ===Account===
+====v1,v2====
 
 This level splits the key space into independent user identities, following the BIP44 pattern,
 so the wallet never mixes the coins across different accounts.
@@ -129,7 +140,8 @@ To add new script types submit a PR to this specification and include it in the 
 <code>X'</code>: Future script type <code>m/48'/0'/0'/X'</code></br>
 
 
-===Vendor (v2 only)===
+===Vendor===
+====v2====
 
 Vendor is only set on BIP48 version 2 addresses; this level splits the key space into individual
 vendor-specific product keys, so the wallet doesn't co-mingle coins associated with different products
@@ -143,6 +155,7 @@ master bank account.
 Public derivation is used at this level.
 
 ===Change===
+====v1,v2====
 
 Constant 0 is used for external chain and constant 1 for internal chain (also
 known as change addresses). External chain is used for addresses that are meant
@@ -153,6 +166,7 @@ wallet and is used for return transaction change.
 Public derivation is used at this level.
 
 ===Index===
+====v1,v2====
 
 Addresses are numbered from index 0 in sequentially increasing manner.
 This number is used as child index in BIP32 derivation.
@@ -160,6 +174,7 @@ This number is used as child index in BIP32 derivation.
 Public derivation is used at this level.
 
 ==Examples==
+===v1===
 
 {|
 |network
@@ -266,6 +281,130 @@ Public derivation is used at this level.
 |change
 |second
 |m / 48' / 1' / 1' / 2' / 1 / 1
+|}
+
+===v2===
+
+{|
+|network
+|account
+|script
+|chain
+|address
+|vendor
+|path
+|-
+|mainnet
+|first
+|p2wsh
+|external
+|first
+|first
+|m / 48' / 2' / 0' / 2' / 0 / 0 / 0
+|-
+|mainnet
+|first
+|p2wsh
+|external
+|second
+|first
+|m / 48' / 2' / 0' / 2' / 0 / 0 /  1
+|-
+|mainnet
+|first
+|p2wsh
+|change
+|first
+|first
+|m / 48' / 2' / 0' / 2' / 1 / 0 / 0
+|-
+|mainnet
+|first
+|p2wsh
+|change
+|second
+|second
+|m / 48' / 2' / 0' / 2' / 1 / 1 / 1
+|-
+|mainnet
+|second
+|p2wsh
+|external
+|first
+|first
+|m / 48' / 2' / 1' / 2' / 0 / 0 /  0
+|-
+|mainnet
+|second
+|p2wsh
+|external
+|second
+|first
+|m / 48' / 2' / 1' / 2' / 0 / 0 / 1
+|-
+|testnet
+|first
+|p2sh-p2wsh
+|external
+|first
+|first
+|m / 48' / 3' / 0' / 1' / 0 / 0
+|-
+|testnet
+|first
+|p2wsh
+|external
+|second
+|first
+|m / 48' / 3' / 0' / 2' / 0 / 1
+|-
+|testnet
+|first
+|p2wsh
+|change
+|first
+|first
+|m / 48' / 3' / 0' / 2' / 1 / 0
+|-
+|testnet
+|first
+|p2wsh
+|change
+|second
+|second
+|m / 48' / 3' / 0' / 2' / 1 / 1
+|-
+|testnet
+|second
+|p2wsh
+|external
+|first
+|first
+|m / 48' / 3' / 1' / 2' / 0 / 0
+|-
+|testnet
+|second
+|p2wsh
+|external
+|second
+|second
+|m / 48' / 3' / 1' / 2' / 0 / 1
+|-
+|testnet
+|second
+|p2wsh
+|change
+|first
+|first
+|m / 48' / 3' / 1' / 2' / 1 / 0
+|-
+|testnet
+|second
+|p2wsh
+|change
+|second
+|second
+|m / 48' / 3' / 1' / 2' / 1 / 1
 |}
 
 
